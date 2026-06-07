@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Log Viewer</title>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <link rel="stylesheet" href="./style/index.css">
+    <link rel="stylesheet" href="./style/dialog.css" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    
+  </head>
+  <body>
+    <header>
+      <div class="layout-responsive">
+        <div class="header-top">
+          <span class="logo">Easy Logger</span>
+          <span class="status-dot" id="dot"></span>
+          <div class="d_row g_10">
+            <span class="status-label" id="status-label">No Connection</span>
+            <div
+              class="btn_copy_conntection"
+              id="btn_copy_connection"
+              onclick="copyIp()"
+            ></div>
+          </div>
+
+          <span class="count-badge"
+            >showing <strong id="visible-count">0</strong> /
+            <strong id="total-count">0</strong></span
+          >
+          <button class="btn-clear" onclick="clearLogs()">✕ clear</button>
+        </div>
+        <div class="controls">
+          <div class="search-wrap">
+            <svg
+              width="14"
+              height="14"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <path d="M21 21l-4.35-4.35" />
+            </svg>
+            <input
+              id="search"
+              type="text"
+              placeholder="search messages, tags…"
+              oninput="render()"
+            />
+          </div>
+          <div class="filter-group">
+            <button
+              class="filter-btn active"
+              data-type="0"
+              onclick="setFilter(0)"
+            >
+              ALL
+            </button>
+            <button class="filter-btn" data-type="1" onclick="setFilter(1)">
+              ⚠ WARNING
+            </button>
+            <button class="filter-btn" data-type="2" onclick="setFilter(2)">
+              ✕ ERROR
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div id="log-container"></div>
+
+    <div class="overlay" id="overlay" onclick="handleOverlayClick(event)">
+      <div
+        class="modal"
+        id="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+      >
+        <div class="modal-header">
+        </div>
+        <div class="modal-body"></div>
+        <!-- <div class="modal-footer">
+          <button class="btn btn-cancel" onclick="closeModal()">Close</button>
+        </div> -->
+      </div>
+    </div>
+
+    <div id="bottom_screen_element"></div>
+
+    <!-- js -->
+    <script src="./scripts.js"></script>
+    
+  </body>
+</html>
