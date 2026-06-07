@@ -2,7 +2,6 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const path = require('path');
-const os = require('os');
 const { randomUUID } = require('crypto');
 
 const app = express();
@@ -57,7 +56,7 @@ io.on('connection', (socket) => {
     logs.push(newLog);
 
     let totalSize = logs.reduce((sum, log) => sum + log.size, 0);
-    while (totalSize > 200000 && logs.length > 0) {
+    while (totalSize > 100000 && logs.length > 0) {
       io.emit('remove-log', logs[0].id);
       const removed = logs.shift();
       totalSize -= removed.size;
