@@ -197,7 +197,7 @@ EasyLogger.shared.dispose()  // Disconnects socket, releases resources (e.g. on 
 
 -----
 
-### Flutter — `flutter_easy_logger`
+### Flutter — `flutter_easy_logger_plus`
 
 > **Source:** [github.com/horlengg/flutter_easy_logger](https://github.com/horlengg/flutter_easy_logger)
 
@@ -205,13 +205,13 @@ Add `flutter_easy_logger` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  flutter_easy_logger: ^<latest-version>
+  flutter_easy_logger_plus: ^<latest-version>
 ```
 
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:flutter_easy_logger/easy_logger.dart';
+import 'package:flutter_easy_logger_plus/flutter_easy_logger_plus.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -274,3 +274,10 @@ EasyLogger.instance.dispose()  // Disconnects socket, releases resources (e.g. o
 ## License
 
 MIT
+
+
+## Contact Me
+
+If you have any questions, suggestions, or issues, feel free to reach out via my website:
+
+👉 [Website](https://horleng.vercel.app)
