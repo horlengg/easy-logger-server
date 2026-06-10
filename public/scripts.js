@@ -6,6 +6,8 @@ let currentFilter = { type: 0, query: "" };
 let logs = [];
 let activeFilter = 0;
 
+const logSizeLimitTextField = document.getElementById('logSize');
+
 // ── Socket ────────────────────────────────────────
 const socket = io(SOCKET_URL, { transports: ["websocket"] });
 
@@ -28,6 +30,9 @@ socket.on("clear-all-logs", () => {
     logs = [];
     render();
 });
+socket.on("log-size-limit-changed", (logSizeLimit) => {
+    logSizeLimitTextField.value = logSizeLimit
+});
 socket.on("new-log", (data) => {
     logs.push(data);
     updateCounts();
@@ -46,6 +51,7 @@ socket.on("initial-logs", (data) => {
     setConnectionSource(data.uri);
     render();
     scrollBottom();
+    logSizeLimitTextField.value = data.logSizeLimit
 });
 
 function setFilter(n) {
@@ -152,7 +158,7 @@ function entryHTML(l, q) {
               <span class="col-time">${time}</span>
             </div>
             <div>
-              <span class="view-full-log-icon" data-log-id="${l.id}" onclick="copyLogs(event)">
+              <span class="icon-button sm" data-log-id="${l.id}" onclick="copyLogs(event)">
                 <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
                     <path d="M0 0h24v24H0z" fill="none" />
                     <g fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
@@ -162,7 +168,7 @@ function entryHTML(l, q) {
                 </svg>
 
               </span>
-              <span class="view-full-log-icon" data-log-id="${l.id}" onclick="viewFullLog(event)">
+              <span class="icon-button sm" data-log-id="${l.id}" onclick="viewFullLog(event)">
                 <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" viewBox="0 0 24 24">
                   <path d="M0 0h24v24H0z" fill="none" />
                   <g fill="none" stroke="#fff" stroke-width="1.5">
@@ -436,3 +442,22 @@ function scrollBottom() {
     const latestLogElement = document.getElementById("bottom_screen_element");
     latestLogElement?.scrollIntoView({ behavior: "smooth", block: "end" });
 }
+
+
+
+function saveLogSizeLimit() {
+  const size = parseInt(logSizeLimitTextField.value);
+  if (isNaN(size) || size <= 0) {
+    logSizeLimitTextField.value = '';
+    return;
+  }
+  logSizeLimitTextField.value = size;
+  socket.emit("log-size-limit-change", size);
+}
+
+logSizeLimitTextField.addEventListener('blur', saveLogSizeLimit);
+logSizeLimitTextField.addEventListener('keydown', function(event) {
+  if (event.key === 'Enter') {
+    logSizeLimitTextField.blur();
+  }
+});
