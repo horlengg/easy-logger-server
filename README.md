@@ -33,7 +33,7 @@ The server is a Node.js + Express + Socket.IO app. It binds to your machine’s 
 
 ```js
 const PORT = process.env.PORT || 3000;
-const host = process.env.HOST_IP || "172.20.10.12"; // Your machine's local IP
+const host = process.env.HOST_IP || "xxxxx"; // Your machine's local IP
 const uri  = `http://${host}:${PORT}`;
 ```
 
@@ -48,7 +48,7 @@ cd easy-logger-server
 npm install
 
 # 3a. Start with your machine's local IP
-HOST_IP=172.20.10.12 node server.js
+HOST_IP=xx.xx.xx.xx node server.js
 
 # 3b. Or use the default IP hardcoded in server.js
 npm start
@@ -63,7 +63,7 @@ The log viewer UI will be available at `http://<your-ip>:3000` in your browser.
 docker build -t easy-logger-server .
 
 # Run with your local IP passed as an environment variable
-docker run -p 3000:3000 -e HOST_IP=172.20.10.12 easy-logger-server
+docker run -p 3000:3000 -e HOST_IP=xx.xx.xx.xx easy-logger-server
 ```
 
 The Dockerfile uses `node:18-alpine` and exposes port `3000`.
@@ -75,7 +75,7 @@ The Dockerfile uses `node:18-alpine` and exposes port `3000`.
 ifconfig en0 | grep "inet "
 ```
 
-Example output: `inet 172.20.10.12 netmask 0xffffff00`
+Example output: `inet xx.xx.xx.xx netmask 0xffffff00`
 
 Use that IP for both the server startup command **and** the `initialize(...)` call in your client library.
 
@@ -83,7 +83,7 @@ Use that IP for both the server startup command **and** the `initialize(...)` ca
 
 |Variable |Default       |Description                  |
 |---------|--------------|-----------------------------|
-|`HOST_IP`|`172.20.10.12`|Your machine’s LAN IP address|
+|`HOST_IP`|`xx.xx.xx.xx`|Your machine’s LAN IP address|
 |`PORT`   |`3000`        |Port the server listens on   |
 
 -----
@@ -146,7 +146,7 @@ import EasyLogger
 struct MyApp: App {
 
     init() {
-        EasyLogger.shared.initialize("http://172.20.10.12:3000", enable: isLoggingEnabled)
+        EasyLogger.shared.initialize("http://xx.xx.xx.xx:3000", enable: isLoggingEnabled)
     }
 
     var body: some Scene {
@@ -208,40 +208,39 @@ dependencies:
   flutter_easy_logger_plus: ^<latest-version>
 ```
 
+**Enable logging with a compile-time flag**
+```bash
+# Development — logging enabled
+flutter run --dart-define=LOG_SERVER_URI=http://10.105.141.142:3000
 
-```dart
-import 'package:flutter/material.dart';
-import 'package:flutter_easy_logger_plus/flutter_easy_logger_plus.dart';
+# Production build — logging disabled (default)
+flutter build apk
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  EasyLogger.instance.initialize("http://your_IP:3000"); // Your local IP 
-  runApp(const MyApp());
-}
 ```
+
 
 **Logging methods**
 
 All methods accept an optional `tag` (defaults to `"DEFAULT"`) to group related logs.
 
 ```swift
-EasyLogger.instance.debug("User tapped login button", tag: "Auth")
-EasyLogger.instance.warning("Token is about to expire", tag: "Auth")
-EasyLogger.instance.error("Failed to parse response",  tag: "Network")
+EasyLogger().debug("User tapped login button", tag: "Auth")
+EasyLogger().warning("Token is about to expire", tag: "Auth")
+EasyLogger().error("Failed to parse response",  tag: "Network")
 ```
 
 **Log a Codable array as formatted JSON**
 
 ```swift
 final apiResponseStr = EasyLogger.instance.toJSONString(apiResponse);
-EasyLogger.instance.debug("API Response: <json>$apiResponseStr<json>", tag: "API");
+EasyLogger().debug("API Response: <json>$apiResponseStr<json>", tag: "API");
 ```
 
 **Other methods**
 
 ```swift
-EasyLogger.instance.clear()    // Clears pending (queued) logs and emits `clear` to the server
-EasyLogger.instance.dispose()  // Disconnects socket, releases resources (e.g. on logout)
+EasyLogger().clear()    // Clears pending (queued) logs and emits `clear` to the server
+EasyLogger().dispose()  // Disconnects socket, releases resources (e.g. on logout)
 ```
 
 **Log types**
